@@ -90,10 +90,12 @@ class DataTransformation:
         df = self.transform_total_sqft(df)
         df = self.calculate_price_per_sqft(df)
         df = self.handle_location_feature(df)
+        df = df[~(df.total_sqft / df.bhk < 300)]
         df = self.remove_outliers(df)
         df = self.remove_bhk_outliers(df)
         df = df[df.bath < df.bhk + 2]
         df = df.drop(['size', 'price_per_sqft'], axis='columns')
+        # One-Hot Encoding with Column Consistency
         dummies = pd.get_dummies(df['location'])
         df = pd.concat([df, dummies.drop('other', axis='columns')], axis='columns')
         df = df.drop('location', axis='columns')
@@ -101,17 +103,20 @@ class DataTransformation:
 
     def initiate_data_transformation(self, train_path, test_path):
         try:
-            logging.info("Initiating data transformation")
+            logging.info("Loading data")
             train_df = pd.read_csv(train_path)
             test_df = pd.read_csv(test_path)
-            train_df = self.apply_transformations(train_df)
-            test_df = self.apply_transformations(test_df)
-            logging.info("Saving transformation results")
+            logging.info("Saving the preprocessed data")
+        
+      
+            
+
             # Save transformed data as an object (dictionary)
             save_object(
                 file_path=self.data_transformation_config.preprocessor_obj_file_path,
                 obj={"train": train_df, "test": test_df})
             logging.info("Data transformation completed")
+            
             return train_df, test_df
         except Exception as e:
             raise CustomException(e, sys)
