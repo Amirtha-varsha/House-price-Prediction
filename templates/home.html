@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>House Price Prediction</h1>
+    
+    <form id="predictionForm" action="/predictdate" method="POST">
+        <!-- Area -->
+        <div class="form-group">
+            <label for="total_sqft">Area (in square feet):</label>
+            <input type="number" id="total_sqft" name="total_sqft" required min="1" placeholder="Enter the area of the house">
+        </div>
+        <div class="form-group">
+            <label for="bhk">BHK:</label>
+            <select id="bhk" name="bhk" required>
+                <option value="1">1 BHK</option>
+                <option value="2" selected>2 BHK</option>
+                <option value="3">3 BHK</option>
+                <option value="4">4 BHK</option>
+                <option value="5">5 BHK</option>
+            </select>
+        </div>
+        
+        <!-- Number of Bathrooms -->
+        <div class="form-group">
+            <label for="bath">Number of Bathrooms:</label>
+            <select id="bath" name="bath" required>
+                <option value="1">1</option>
+                <option value="2" selected>2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="location">Location:</label>
+            <select id="location" name="location" required>
+                <option value="">Select Location</option>
+            </select>
+            <script>
+                let locations = [
+                    '1st Block Jayanagar', '1st Phase JP Nagar','2nd Phase Judicial Layout', '2nd Stage Nagarbhavi',
+                    '5th Block Hbr Layout', '5th Phase JP Nagar', '6th Phase JP Nagar',
+                    '7th Phase JP Nagar', '8th Phase JP Nagar', '9th Phase JP Nagar',
+                    'AECS Layout', 'Abbigere', 'Akshaya Nagar', 'Ambalipura','Ambedkar Nagar', 'Amruthahalli', 'Anandapura', 'Ananth Nagar',
+                    'Anekal', 'Anjanapura', 'Ardendale', 'Arekere', 'Attibele',
+                    'BEML Layout', 'BTM 2nd Stage', 'BTM Layout', 'Babusapalaya','Badavala Nagar', 'Balagere', 'Banashankari','Banashankari Stage II', 'Banashankari Stage III',
+                    'Banashankari Stage V', 'Banashankari Stage VI', 'Banaswadi','Banjara Layout', 'Bannerghatta', 'Bannerghatta Road',
+                    'Basavangudi', 'Basaveshwara Nagar', 'Battarahalli', 'Begur','Begur Road', 'Bellandur', 'Benson Town', 'Bharathi Nagar',
+                    'Bhoganhalli', 'Billekahalli', 'Binny Pete', 'Bisuvanahalli','Bommanahalli', 'Bommasandra', 'Bommasandra Industrial Area',
+                    'Bommenahalli', 'Brookefield', 'Budigere', 'CV Raman Nagar','Chamrajpet', 'Chandapura', 'Channasandra', 'Chikka Tirupathi','Chikkabanavar', 'Chikkalasandra', 'Choodasandra', 'Cooke Town',
+                    'Cox Town', 'Cunningham Road', 'Dasanapura', 'Dasarahalli','Devanahalli', 'Devarachikkanahalli', 'Dodda Nekkundi','Doddaballapur', 'Doddakallasandra', 'Doddathoguru', 'Domlur',
+                    'Dommasandra', 'EPIP Zone', 'Electronic City','Electronic City Phase II', 'Electronics City Phase 1','Frazer Town', 'GM Palaya', 'Garudachar Palya', 'Giri Nagar','Gollarapalya Hosahalli', 'Gottigere', 'Green Glen Layout',
+                    'Gubbalala', 'Gunjur', 'HAL 2nd Stage', 'HBR Layout','HRBR Layout', 'HSR Layout', 'Haralur Road', 'Harlur', 'Hebbal','Hebbal Kempapura', 'Hegde Nagar', 'Hennur', 'Hennur Road',
+                    'Hoodi', 'Horamavu Agara', 'Horamavu Banaswadi', 'Hormavu','Hosa Road', 'Hosakerehalli', 'Hoskote', 'Hosur Road', 'Hulimavu','ISRO Layout', 'ITPL', 'Iblur Village', 'Indira Nagar', 'JP Nagar',
+                    'Jakkur', 'Jalahalli', 'Jalahalli East', 'Jigani','Judicial Layout', 'KR Puram', 'Kadubeesanahalli', 'Kadugodi','Kaggadasapura', 'Kaggalipura', 'Kaikondrahalli','Kalena Agrahara', 'Kalyan nagar', 'Kambipura', 'Kammanahalli','Kammasandra', 'Kanakapura', 'Kanakpura Road', 'Kannamangala',
+                    'Karuna Nagar', 'Kasavanhalli', 'Kasturi Nagar', 'Kathriguppe','Kaval Byrasandra', 'Kenchenahalli', 'Kengeri','Kengeri Satellite Town', 'Kereguddadahalli', 'Kodichikkanahalli',
+                    'Kodigehaali', 'Kodigehalli', 'Kodihalli', 'Kogilu', 'Konanakunte',
+                    'Koramangala', 'Kothannur', 'Kothanur', 'Kudlu', 'Kudlu Gate','Kumaraswami Layout', 'Kundalahalli', 'LB Shastri Nagar','Laggere', 'Lakshminarayana Pura', 'Lingadheeranahalli',
+                    'Magadi Road', 'Mahadevpura', 'Mahalakshmi Layout', 'Mallasandra','Malleshpalya', 'Malleshwaram', 'Marathahalli', 'Margondanahalli','Marsur', 'Mico Layout', 'Munnekollal', 'Murugeshpalya',
+                    'Mysore Road', 'NGR Layout', 'NRI Layout', 'Nagarbhavi','Nagasandra', 'Nagavara', 'Nagavarapalya', 'Narayanapura','Neeladri Nagar', 'Nehru Nagar', 'OMBR Layout', 'Old Airport Road',
+                    'Old Madras Road', 'Padmanabhanagar', 'Pai Layout', 'Panathur','Parappana Agrahara', 'Pattandur Agrahara', 'Poorna Pragna Layout','Prithvi Layout', 'R.T. Nagar', 'Rachenahalli','Raja Rajeshwari Nagar', 'Rajaji Nagar', 'Rajiv Nagar','Ramagondanahalli', 'Ramamurthy Nagar', 'Rayasandra','Sahakara Nagar', 'Sanjay nagar', 'Sarakki Nagar', 'Sarjapur',
+                    'Sarjapur  Road', 'Sarjapura - Attibele Road','Sector 2 HSR Layout', 'Sector 7 HSR Layout', 'Seegehalli',
+                    'Shampura', 'Shivaji Nagar', 'Singasandra', 'Somasundara Palya','Sompura', 'Sonnenahalli', 'Subramanyapura', 'Sultan Palaya',
+                    'TC Palaya', 'Talaghattapura', 'Thanisandra', 'Thigalarapalya','Thubarahalli', 'Tindlu', 'Tumkur Road', 'Ulsoor', 'Uttarahalli',
+                    'Varthur', 'Varthur Road', 'Vasanthapura', 'Vidyaranyapura','Vijayanagar', 'Vishveshwarya Layout', 'Vishwapriya Layout',
+                    'Vittasandra', 'Whitefield', 'Yelachenahalli', 'Yelahanka','Yelahanka New Town', 'Yelenahalli', 'Yeshwanthpur'
+                ];
+                let dropdown = document.getElementById("location");
+                
+                locations.forEach(loc => {
+                    let option = document.createElement("option");
+                    option.value = loc;
+                    option.textContent = loc;
+                    dropdown.appendChild(option);
+                });
+            </script>
+        </div> 
+
+        <!-- Submit Button -->
+        <button type="submit">Predict Price</button>
+    </form>
+    <!-- Predicted Price Section -->
+    <div class="form-group">
+        <label for="predictedPrice">Predicted House Price:</label>
+        <input type="text" id="predictedPrice" name="predictedPrice" readonly placeholder="Prediction will appear here"
+        value="{% if results %} ₹ {{ results }} Lakhs {% endif %}">
+    </div>
+
+</div>
+
+</body>
+</html>

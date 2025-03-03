@@ -1,17 +1,9 @@
 import os
 import sys
 from dataclasses import dataclass
-from catboost import CatBoostRegressor
-from sklearn.ensemble import(
-    AdaBoostRegressor,
-    GradientBoostingRegressor,
-    RandomForestRegressor,
-)
+import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.tree import DecisionTreeRegressor
-from xgboost import XGBRegressor
 
 from src.exception import CustomException
 from src.logger import logging
@@ -25,9 +17,14 @@ class ModelTrainer:
         self.model_trainer_config=ModelTrainerConfig()
     def initiate_model_trainer(self,train_array,test_array):
         try:
+            # Convert NumPy arrays back to DataFrames
+            column_names = [f"feature_{i}" for i in range(train_array.shape[1] - 1)] + ["price"]
+            train_df = pd.DataFrame(train_array, columns=column_names)
+            test_df = pd.DataFrame(test_array, columns=column_names)
+            # Now dropping the target column properly
             logging.info("split training and test input data")
-            X_train, y_train = train_array.drop(columns=["price"]).values, train_array["price"].values
-            X_testt, y_test = test_array.drop(columns=["price"]).values, test_array["price"].values
+            X_train, y_train = train_df.drop(columns=["price"]).values, train_df["price"].values
+            X_testt, y_test = test_df.drop(columns=["price"]).values, test_df["price"].values
             print("X_train shape:", X_train.shape)
             print("X_test shape:", X_testt.shape)
             model = LinearRegression()
