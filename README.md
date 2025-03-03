@@ -44,3 +44,12 @@ This project is a House Price Prediction system that estimates the price of a ho
 ### **3. Frontend-Backend Integration Issues**
 - **Issue:** User inputs were not properly passed between the Flask backend and the frontend.  
 - **Solution:** Debugged Flask routes, ensured correct form submission, and used AJAX for seamless data transfer.
+
+
+## Output Screenshot
+# ** Index **
+artifacts/index.png
+# ** Home **
+artifacts/home.png
+# ** Predicted Price **
+artifacts/predicted price.png
