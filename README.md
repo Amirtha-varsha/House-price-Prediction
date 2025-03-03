@@ -46,10 +46,13 @@ This project is a House Price Prediction system that estimates the price of a ho
 - **Solution:** Debugged Flask routes, ensured correct form submission, and used AJAX for seamless data transfer.
 
 
-## Output Screenshot
-# ** Index **
-artifacts/index.png
-# ** Home **
-artifacts/home.png
-# ** Predicted Price **
-artifacts/predicted price.png
+## Output Screenshots
+
+### **Index Page**
+![Index Page](artifacts/index.png)
+
+### **Home Page**
+![Home Page](artifacts/home.png)
+
+### **Predicted Price**
+![Predicted Price](artifacts/predicted%20price.png)
